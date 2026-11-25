@@ -105,6 +105,24 @@ Start a new chat and ask a question. Approve the tool call the first time Claude
 
 ![Claude Desktop charting Microsoft's October 2026 prices using the get_historical_prices tool](claude_testing_2.png)
 
+## How Claude Desktop runs the server
+
+You do not start `server.py` yourself. Claude Desktop starts it each time the app opens and stops it when the app quits.
+
+1. The `stock-prices` entry in the config file is a launch command: `uv run --directory /full/path/to/stock-mcp server.py`.
+2. Claude Desktop runs that command as a hidden child process at startup. No terminal window appears.
+3. The two talk through the process's stdin and stdout. This is the stdio transport: there is no port, URL or network connection between them.
+4. When Claude needs a price, it sends a tool call down that pipe, the server calls Twelve Data, and the answer comes back the same way.
+
+What this means in practice:
+
+- **Nothing to start manually.** A copy you run with `uv run server.py` in a terminal just waits for input, and Claude Desktop does not use it.
+- **It runs on your computer.** The server only works in Claude Desktop on the machine where it is configured, not in claude.ai in a browser or on a phone.
+- **The folder has to stay where it is.** If you move or rename it, update the path in the config file.
+- **Code changes need an app restart.** After editing `server.py` or `stock_formatter.py`, quit and reopen Claude Desktop. Changes to `.env` are picked up without a restart.
+
+The only time you run the server yourself is with the Inspector in step 3, which plays the client's role in place of Claude Desktop.
+
 ## What the server provides
 
 **Tools**, which Claude calls on its own:

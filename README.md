@@ -18,7 +18,7 @@ Ask Claude "Compare the current prices of NVDA, MSFT and GOOGL" and it calls thi
 ### 1. Get the code and install dependencies
 
 ```bash
-git clone <this repo's URL>
+git clone https://github.com/JavierPachas/stock-mcp.git
 cd stock-mcp
 uv sync
 ```
